@@ -12,13 +12,19 @@ from jwt import PyJWTError
 from functools import wraps
 
 load_dotenv()
-security = HTTPBearer()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
+security = HTTPBearer()
 
-def create_jwt_token(firstname:str, lastname:str, email: str, 
-                     active: bool, admin: bool, id: str):
-    
+# Función para crear un JWT
+def create_jwt_token(
+        firstname:str
+        , lastname:str
+        , email: str
+        , active: bool
+        , admin: bool
+        , id: str
+):
     expiration = datetime.utcnow() + timedelta(hours=1)  # El token expira en 1 hora
     token = jwt.encode(
         {
