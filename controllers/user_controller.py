@@ -90,7 +90,7 @@ async def login(user: Login) -> dict:
         "email": user.email
         , "password": user.password
         , "returnSecureToken": True
-    }
+    }  
 
     response = requests.post(url, json=payload)
     response_data = response.json()
