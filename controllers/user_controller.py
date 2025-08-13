@@ -21,28 +21,29 @@ logger = logging.getLogger(__name__)
 
 
 def initialize_firebase():
-    if firebase_admin._apps:
-        return
-
     try:
         firebase_creds_base64 = os.getenv("FIREBASE_CREDENTIALS_BASE64")
+        if not firebase_creds_base64:
+            raise ValueError("FIREBASE_CREDENTIALS_BASE64 está vacío")
 
-        if firebase_creds_base64:
-            firebase_creds_json = base64.b64decode(firebase_creds_base64).decode('utf-8')
-            firebase_creds = json.loads(firebase_creds_json)
-            cred = credentials.Certificate(firebase_creds)
-            firebase_admin.initialize_app(cred)
-            logger.info("Firebase initialized with environment variable credentials")
-        else:
-            # Fallback to local file (for local development)
-            cred = credentials.Certificate("secrets/firebase_credentials.json")
-            firebase_admin.initialize_app(cred)
-            logger.info("Firebase initialized with JSON file")
+        # Eliminar saltos de línea
+        firebase_creds_base64 = firebase_creds_base64.replace("\n", "")
+
+        # Decodificar Base64
+        import base64
+        firebase_creds_json = base64.b64decode(firebase_creds_base64).decode("utf-8")
+
+        # Convertir a dict
+        firebase_creds_dict = json.loads(firebase_creds_json)
+
+        # Inicializar Firebase
+        cred = credentials.Certificate(firebase_creds_dict)
+        firebase_admin.initialize_app(cred)
+        print("Firebase inicializado correctamente")
 
     except Exception as e:
-        logger.error(f"Failed to initialize Firebase: {e}")
-        raise HTTPException(status_code=500, detail=f"Firebase configuration error: {str(e)}")
-
+        print(f"ERROR: Failed to initialize Firebase: {str(e)}")
+        raise
 
 initialize_firebase()
 
