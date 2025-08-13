@@ -1,4 +1,3 @@
-
 import logging
 import os
 import base64
@@ -34,7 +33,7 @@ def initialize_firebase():
             logger.info("Firebase initialized with environment variable credentials")
         else:
             # Fallback to local file (for local development)
-            cred = credentials.Certificate("secrets/dulceria-secret.json")
+            cred = credentials.Certificate("secrets/firebase_credentials.json")
             firebase_admin.initialize_app(cred)
             logger.info("Firebase initialized with JSON file")
 
