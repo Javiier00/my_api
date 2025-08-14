@@ -13,7 +13,7 @@ from routes.shirt_routes import router as shirt_router
 
 app = FastAPI()
 
-# Add CORS
+# Add CORS.
 from fastapi.middleware.cors import CORSMiddleware
 app.add_middleware(
     CORSMiddleware,
