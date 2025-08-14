@@ -42,8 +42,8 @@ def health_check():
 @app.get("/ready")
 def readiness_check():
     try:
-        from utils.mongodb import test_connection
-        db_status = test_connection()
+        from utils.mongodb import t_connection
+        db_status = t_connection()
         return {
             "status": "ready" if db_status else "not_ready",
             "database": "connected" if db_status else "disconnected",
