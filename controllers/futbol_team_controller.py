@@ -69,7 +69,7 @@ async def delete_futbol_team(team_id: str) -> dict:
         if associated_shirts > 0:
             # Si hay camisetas asociadas, no permitir eliminación
             raise HTTPException(
-                status_code=400,
+                status_code=405,
                 detail="No se puede eliminar el equipo porque tiene camisetas asociadas"
             )
 
