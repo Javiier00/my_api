@@ -7,12 +7,12 @@ from controllers.futbol_team_controller import (
     delete_futbol_team,
     list_futbol_teams  
 )
-from utils.security import validateadmin
+from utils.security import validateadmin, validateuser
 
 router = APIRouter()
 
 @router.post("/futbol_teams", response_model=FutbolTeam, tags=["⚽ Futbol Teams"])
-@validateadmin
+@validateuser
 async def create_futbol_team_endpoint(request: Request, team: FutbolTeam) -> FutbolTeam:
     """Crear un nuevo equipo de fútbol"""
     return await create_futbol_team(team)
@@ -28,13 +28,13 @@ async def get_futbol_team_endpoint(team_id: str) -> FutbolTeam:
     return await get_futbol_team(team_id)
 
 @router.put("/futbol_teams/{team_id}", response_model=FutbolTeam, tags=["⚽ Futbol Teams"])
-@validateadmin
+@validateuser
 async def update_futbol_team_endpoint(request: Request, team_id: str, team: FutbolTeam) -> FutbolTeam:
     """Actualizar un equipo de fútbol"""
     return await update_futbol_team(team_id, team)
 
 @router.delete("/futbol_teams/{team_id}", response_model=dict, tags=["⚽ Futbol Teams"])
-@validateadmin
+@validateuser
 async def delete_futbol_team_endpoint(request: Request, team_id: str) -> dict:
     """Eliminar un equipo de fútbol"""
     return await delete_futbol_team(team_id)
