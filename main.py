@@ -13,6 +13,16 @@ from routes.shirt_routes import router as shirt_router
 
 app = FastAPI()
 
+# Add CORS
+from fastapi.middleware.cors import CORSMiddleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins for development; restrict in production
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
+)
+
 @app.get("/")
 def read_root():
     return {"version": "0.0.0"}
@@ -23,7 +33,7 @@ def health_check():
         return {
             "status": "healthy", 
             "timestamp": "2025-08-02", 
-            "service": "VentaCamisetas-api",
+            "service": "ventacamisetas-api",
             "environment": "production"
         }
     except Exception as e:
@@ -37,7 +47,7 @@ def readiness_check():
         return {
             "status": "ready" if db_status else "not_ready",
             "database": "connected" if db_status else "disconnected",
-            "service": "VentaCamisetas-api"
+            "service": "ventacamisetas-api"
         }
     except Exception as e:
         return {"status": "not_ready", "error": str(e)}
