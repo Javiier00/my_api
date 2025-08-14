@@ -2,14 +2,14 @@ from fastapi import APIRouter, Request
 from controllers.shirt_controller import create_shirt, get_shirt, update_shirt, delete_shirt, list_shirts
 from models.shirt import Shirt, DeleteMessage
 
-from utils.security import validateadmin
+from utils.security import validateadmin, validateuser
 
 router = APIRouter()
 
 
 
 @router.post("/shirts", response_model=Shirt,tags=["👕 Shirt"])
-@validateadmin
+@validateuser
 async def create_new_shirt(request: Request, shirt: Shirt) -> Shirt:
     return await create_shirt(shirt)
 
@@ -26,7 +26,7 @@ async def read_shirt(shirt_id: str):
 
 
 @router.put("/shirts/{shirt_id}", response_model=Shirt, tags=["👕 Shirt"])
-@validateadmin
+@validateuser
 async def update_existing_shirt(request: Request, shirt_id: str, shirt: Shirt)-> Shirt:
     return await update_shirt(shirt_id, shirt)
 
@@ -35,7 +35,7 @@ async def update_existing_shirt(request: Request, shirt_id: str, shirt: Shirt)->
 
 
 @router.delete("/shirts/{shirt_id}", response_model= DeleteMessage, tags=["👕 Shirt"])
-@validateadmin
+@validateuser
 async def remove_shirt(request: Request, shirt_id: str)-> Shirt:
     return await delete_shirt(shirt_id)
 
