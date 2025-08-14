@@ -60,16 +60,31 @@ async def update_futbol_team(team_id: str, team: FutbolTeam) -> FutbolTeam:
 
 async def delete_futbol_team(team_id: str) -> dict:
     try:
-        coll = get_collection("futbol_teams")
-        # Convierte el ID a ObjectId
-        result = coll.delete_one({"_id": ObjectId(team_id)})  # Cambia a ObjectId
+        # Obtener la colección de equipos y camisetas
+        teams_coll = get_collection("futbol_teams")
+        shirts_coll = get_collection("shirts")
+
+        # Verificar si alguna camiseta está asociada al equipo
+        associated_shirts = shirts_coll.count_documents({"team_id": team_id})
+        if associated_shirts > 0:
+            # Si hay camisetas asociadas, no permitir eliminación
+            raise HTTPException(
+                status_code=400,
+                detail="No se puede eliminar el equipo porque tiene camisetas asociadas"
+            )
+
+        # Intentar eliminar el equipo
+        result = teams_coll.delete_one({"_id": ObjectId(team_id)})
         if result.deleted_count == 0:
-            raise HTTPException(status_code=404, detail="Futbol team not found")
-        return {"message": "Futbol team deleted successfully"}
+            raise HTTPException(status_code=404, detail="Equipo no encontrado")
+
+        return {"message": "Equipo eliminado exitosamente"}
+
+    except HTTPException:
+        raise  # Re-lanzar excepciones HTTP explícitas
     except Exception as e:
         logger.error(f"Error deleting futbol team: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
-
+        raise HTTPException(status_code=500, detail=f"Error en la base de datos: {str(e)}")
 
 def list_futbol_teams() -> list[FutbolTeam]:
     try:
